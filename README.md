@@ -44,5 +44,16 @@ The Pill Selector card allows you to easily customize:
 - The container background color (Hex codes like `#1a1a1a`).
 - Unlimited dynamically added tabs via the GUI.
 
+## Video Demo
+
+
+https://github.com/user-attachments/assets/18cf309d-10a2-4866-9fb1-de207e491d18
+
+
+
+https://github.com/user-attachments/assets/e0750d69-04a3-4fbc-a2bf-fe9317d80949
+
+
+
 ---
 *Created to solve the multi-user dashboard clash and bring native, app-like navigation to Home Assistant.*
