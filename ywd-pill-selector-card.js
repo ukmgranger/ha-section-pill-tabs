@@ -5,7 +5,7 @@ import {
 } from "https://unpkg.com/lit-element@2.4.0/lit-element.js?module";
 
 // ============================================================================
-// 1. THE PILL SELECTOR CARD (With Font Size & Border Radius)
+// 1. THE PILL SELECTOR CARD (With Font Weights)
 // ============================================================================
 
 class YWDPillSelectorEditor extends LitElement {
@@ -119,21 +119,41 @@ class YWDPillSelectorEditor extends LitElement {
           ></ha-textfield>
         </div>
 
-        <ha-textfield
-          label="Active Text Color"
-          .value=${this._config.active_color || "#5ec9c9"}
-          .configValue=${"active_color"}
-          @input=${this._valueChanged}
-          style="display: block; width: 100%; margin-bottom: 10px;"
-        ></ha-textfield>
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <ha-textfield
+            label="Font Weight"
+            .value=${this._config.font_weight || "600"}
+            .configValue=${"font_weight"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
 
-        <ha-textfield
-          label="Container Background"
-          .value=${this._config.container_bg_color || "#1a1a1a"}
-          .configValue=${"container_bg_color"}
-          @input=${this._valueChanged}
-          style="display: block; width: 100%;"
-        ></ha-textfield>
+          <ha-textfield
+            label="Active Font Weight"
+            .value=${this._config.active_font_weight || "700"}
+            .configValue=${"active_font_weight"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <ha-textfield
+            label="Active Text Color"
+            .value=${this._config.active_color || "#5ec9c9"}
+            .configValue=${"active_color"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
+
+          <ha-textfield
+            label="Container Background"
+            .value=${this._config.container_bg_color || "#1a1a1a"}
+            .configValue=${"container_bg_color"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
+        </div>
       </div>
     `;
   }
@@ -349,9 +369,11 @@ class YWDPillSelectorCard extends LitElement {
     const activeColor = this._config.active_color || "#5ec9c9";
     const containerBg = this._config.container_bg_color || "#1a1a1a";
     
-    // New Style Variables (with defaults)
+    // Configurable Styling Variables
     const borderRadius = this._config.border_radius || "14px";
     const fontSize = this._config.font_size || "14px";
+    const fontWeight = this._config.font_weight || "600";
+    const activeFontWeight = this._config.active_font_weight || "700";
 
     let activeIndex = tabs.findIndex(
       (t) => t.target.trim().toLowerCase() === this._selectedTarget
@@ -370,6 +392,8 @@ class YWDPillSelectorCard extends LitElement {
             --active-index: ${visualIndex};
             --custom-radius: ${borderRadius};
             --custom-font-size: ${fontSize};
+            --custom-font-weight: ${fontWeight};
+            --custom-active-font-weight: ${activeFontWeight};
           "
           @pointerdown=${this._handlePointerDown}
           @pointermove=${this._handlePointerMove}
@@ -423,7 +447,6 @@ class YWDPillSelectorCard extends LitElement {
         transform: translateX(calc(100% * var(--active-index)));
         background: rgba(255, 255, 255, 0.1);
         
-        /* Concentric math: Outer radius minus padding (4px) = Perfect inner radius */
         border-radius: calc(var(--custom-radius) - 4px);
         
         transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -442,17 +465,16 @@ class YWDPillSelectorCard extends LitElement {
         text-align: center;
         padding: 12px 8px;
         
-        /* Concentric math applies to the buttons too */
         border-radius: calc(var(--custom-radius) - 4px);
         
         cursor: pointer;
-        font-weight: 600;
         font-size: var(--custom-font-size);
-        transition: color 0.2s ease;
+        font-weight: var(--custom-font-weight);
+        transition: color 0.2s ease, font-weight 0.2s ease;
       }
 
       .active {
-        font-weight: 700;
+        font-weight: var(--custom-active-font-weight);
       }
     `;
   }
