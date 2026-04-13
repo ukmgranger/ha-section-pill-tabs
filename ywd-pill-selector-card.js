@@ -5,7 +5,7 @@ import {
 } from "https://unpkg.com/lit-element@2.4.0/lit-element.js?module";
 
 // ============================================================================
-// 1. THE PILL SELECTOR CARD (Drag + Tap working)
+// 1. THE PILL SELECTOR CARD (With Font Size & Border Radius)
 // ============================================================================
 
 class YWDPillSelectorEditor extends LitElement {
@@ -100,6 +100,24 @@ class YWDPillSelectorEditor extends LitElement {
         </mwc-button>
 
         <h3 style="margin-top: 10px;">Style</h3>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <ha-textfield
+            label="Border Radius"
+            .value=${this._config.border_radius || "14px"}
+            .configValue=${"border_radius"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
+
+          <ha-textfield
+            label="Font Size"
+            .value=${this._config.font_size || "14px"}
+            .configValue=${"font_size"}
+            @input=${this._valueChanged}
+            style="flex: 1;"
+          ></ha-textfield>
+        </div>
 
         <ha-textfield
           label="Active Text Color"
@@ -330,6 +348,10 @@ class YWDPillSelectorCard extends LitElement {
     const tabs = this._config.tabs || [];
     const activeColor = this._config.active_color || "#5ec9c9";
     const containerBg = this._config.container_bg_color || "#1a1a1a";
+    
+    // New Style Variables (with defaults)
+    const borderRadius = this._config.border_radius || "14px";
+    const fontSize = this._config.font_size || "14px";
 
     let activeIndex = tabs.findIndex(
       (t) => t.target.trim().toLowerCase() === this._selectedTarget
@@ -346,6 +368,8 @@ class YWDPillSelectorCard extends LitElement {
             background: ${containerBg};
             --tab-count: ${tabs.length};
             --active-index: ${visualIndex};
+            --custom-radius: ${borderRadius};
+            --custom-font-size: ${fontSize};
           "
           @pointerdown=${this._handlePointerDown}
           @pointermove=${this._handlePointerMove}
@@ -382,7 +406,7 @@ class YWDPillSelectorCard extends LitElement {
       .pill-container {
         position: relative;
         display: flex;
-        border-radius: 14px;
+        border-radius: var(--custom-radius);
         padding: 4px;
         touch-action: pan-y;
         user-select: none;
@@ -398,7 +422,10 @@ class YWDPillSelectorCard extends LitElement {
         width: calc((100% - 8px) / var(--tab-count));
         transform: translateX(calc(100% * var(--active-index)));
         background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
+        
+        /* Concentric math: Outer radius minus padding (4px) = Perfect inner radius */
+        border-radius: calc(var(--custom-radius) - 4px);
+        
         transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
         pointer-events: none;
         will-change: transform;
@@ -414,10 +441,13 @@ class YWDPillSelectorCard extends LitElement {
         flex: 1;
         text-align: center;
         padding: 12px 8px;
-        border-radius: 10px;
+        
+        /* Concentric math applies to the buttons too */
+        border-radius: calc(var(--custom-radius) - 4px);
+        
         cursor: pointer;
         font-weight: 600;
-        font-size: 14px;
+        font-size: var(--custom-font-size);
         transition: color 0.2s ease;
       }
 
@@ -434,7 +464,7 @@ class YWDPillSelectorCard extends LitElement {
 customElements.define("ywd-pill-selector-card", YWDPillSelectorCard);
 
 // ============================================================================
-// 2. THE ANCHOR CARD
+// 2. THE ANCHOR CARD (Unchanged)
 // ============================================================================
 
 class YWDAnchorEditor extends LitElement {
